@@ -9,10 +9,10 @@ import (
 	"github.com/gocarina/gocsv"
 )
 
-func ParseCSVFile(filename string) ([]*Summit, error) {
+func ParseCSVFile(filename string) (SOTADb, error) {
 	summitsFile, err := os.Open(filename)
 	if err != nil {
-		return []*Summit{}, err
+		return SOTADb{}, err
 	}
 	defer summitsFile.Close()
 
@@ -20,21 +20,22 @@ func ParseCSVFile(filename string) ([]*Summit, error) {
 	br := bufio.NewReader(summitsFile)
 	_, err = br.ReadBytes('\n')
 	if err != nil {
-		return []*Summit{}, err
+		return SOTADb{}, err
 	}
 
 	return ParseCSV(br)
 }
 
-func ParseCSV(r io.Reader) ([]*Summit, error) {
+func ParseCSV(r io.Reader) (SOTADb, error) {
 	cr := csv.NewReader(r)
 	cr.FieldsPerRecord = -1 // don't error with inconsistent field numbers
 
-	summits := []*Summit{}
+	summits := []Summit{}
 	err := gocsv.UnmarshalCSV(cr, &summits)
 	if err != nil {
-		return []*Summit{}, err
+		return SOTADb{}, err
 	}
+	db := SOTADb{Summits: summits}
 
-	return summits, nil
+	return db, nil
 }

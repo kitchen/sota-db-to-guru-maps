@@ -11,12 +11,12 @@ type CSVTestSuite struct {
 }
 
 func (suite *CSVTestSuite) TestParseCSVFile() {
-	summits, err := ParseCSVFile("../examples/first-100.csv")
+	db, err := ParseCSVFile("../examples/first-100.csv")
 
 	suite.NoError(err)
-	suite.Equal(100, len(summits))
+	suite.Equal(100, len(db.Summits))
 
-	summit := summits[0]
+	summit := db.Summits[0]
 	suite.Equal("3Y/BV-001", summit.SummitCode)
 	suite.Equal("Bouvet Island", summit.AssociationName)
 	suite.Equal("Bouvetøya (Bouvet Island)", summit.RegionName)
@@ -32,9 +32,10 @@ func (suite *CSVTestSuite) TestParseCSVFile() {
 	suite.Equal("2018-03-01", summit.ValidFrom.Format(ISO8601DateFormat))
 	suite.Equal("2099-12-31", summit.ValidTo.Format(ISO8601DateFormat))
 	suite.Equal(0, summit.ActivationCount)
+	suite.True(summit.LastActivatedOn.IsZero())
 
 	// this one has been activated
-	summit = summits[89]
+	summit = db.Summits[89]
 	suite.Equal("4O/JC-009", summit.SummitCode)
 	suite.Equal("4O7DST/P", summit.LastActivatedBy)
 	suite.Equal("2019-06-27", summit.LastActivatedOn.Format(ISO8601DateFormat))
