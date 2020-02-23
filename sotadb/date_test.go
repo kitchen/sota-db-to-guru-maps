@@ -28,6 +28,11 @@ func (suite *SummitDateTestSuite) TestEmptyDate() {
 	date := SummitDate{}
 	err := date.UnmarshalCSV("")
 	suite.NoError(err)
+	suite.True(date.IsZero())
+
+	csv, err := date.MarshalCSV()
+	suite.NoError(err)
+	suite.Equal("", csv)
 }
 
 func TestSummitDateTestSuite(t *testing.T) {

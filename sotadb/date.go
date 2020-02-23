@@ -21,5 +21,8 @@ func (date *SummitDate) UnmarshalCSV(csv string) (err error) {
 }
 
 func (date *SummitDate) MarshalCSV() (string, error) {
+	if date.IsZero() {
+		return "", nil
+	}
 	return date.Time.Format(DBDateFormat), nil
 }
